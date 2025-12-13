@@ -45,6 +45,21 @@
   --color-incinerator-green-700: #569d14;
   --color-incinerator-green-800: #3d700e;
   --color-incinerator-green-900: #244308;
+  --color-ice-blue: #a8c8df;
+  --color-ice-blue-rgb: 168, 200, 223;
+  --color-ice-blue-hsl: 205.1, 46.2%, 76.7%;
+
+  /* ICE BLUE Shades */
+  --color-ice-blue-50: #ecf3f8;
+  --color-ice-blue-100: #c7dbea;
+  --color-ice-blue-200: #a1c4dc;
+  --color-ice-blue-300: #7caccf;
+  --color-ice-blue-400: #5794c1;
+  --color-ice-blue-500: #a7c7df;
+  --color-ice-blue-600: #3d7ba7;
+  --color-ice-blue-700: #2f5f82;
+  --color-ice-blue-800: #22445d;
+  --color-ice-blue-900: #142937;
   --color-night-black: #0a0a0a;
   --color-night-black-rgb: 10, 10, 10;
   --color-night-black-hsl: 0.0, 0.0%, 3.9%;
@@ -87,6 +102,9 @@
 .bg-incinerator-green { background-color: var(--color-incinerator-green); }
 .text-incinerator-green { color: var(--color-incinerator-green); }
 .border-incinerator-green { border-color: var(--color-incinerator-green); }
+.bg-ice-blue { background-color: var(--color-ice-blue); }
+.text-ice-blue { color: var(--color-ice-blue); }
+.border-ice-blue { border-color: var(--color-ice-blue); }
 .bg-night-black { background-color: var(--color-night-black); }
 .text-night-black { color: var(--color-night-black); }
 .border-night-black { border-color: var(--color-night-black); }

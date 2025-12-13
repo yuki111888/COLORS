@@ -59,6 +59,24 @@ This document outlines the color palette and usage guidelines for the brand.
 
 ---
 
+### ICE BLUE
+
+**Hex:** `#a8c8df`  
+**RGB:** `rgb(168, 200, 223)`  
+**HSL:** `hsl(205.1, 46.2%, 76.7%)`  
+**CSS Variable:** `var(--color-ice-blue)`
+
+**Usage:**
+- Primary brand color
+- Use for key CTAs and important elements
+- Maintains brand identity
+
+**Shades Available:**
+- 50 (lightest) to 900 (darkest)
+- Access via CSS variable: `var(--color-ice-blue-[50-900])`
+
+---
+
 ### NIGHT BLACK
 
 **Hex:** `#0a0a0a`  
