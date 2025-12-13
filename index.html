@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette</title>
+    <link rel="stylesheet" href="palette.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+            line-height: 1.6;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+                color: #e0e0e0;
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            h1 {
+                color: #e0e0e0;
+            }
+        }
+        
+        .color-group {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .color-group {
+                background: #2a2a2a;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            }
+        }
+        
+        .color-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .color-swatch {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .color-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .color-info h2 {
+                color: #e0e0e0;
+            }
+        }
+        
+        .color-details {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .color-details {
+                color: #b0b0b0;
+            }
+        }
+        
+        .shades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .shade-item {
+            text-align: center;
+        }
+        
+        .shade-swatch {
+            width: 100%;
+            height: 80px;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        
+        .shade-label {
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .shade-label {
+                color: #b0b0b0;
+            }
+        }
+        
+        .shade-hex {
+            font-size: 0.7rem;
+            color: #999;
+            font-family: 'Monaco', 'Courier New', monospace;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .shade-hex {
+                color: #888;
+            }
+        }
+        
+        code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            code {
+                background: #3a3a3a;
+                color: #e0e0e0;
+            }
+        }
+        
+        .image-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+            transition: border-color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .image-section {
+                border-top-color: #444;
+            }
+        }
+        
+        .image-container {
+            position: relative;
+            display: block;
+            margin: 1rem 0;
+        }
+        
+        .palette-image-section .image-container {
+            margin: 0;
+        }
+        
+        .color-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .palette-image-section .color-image {
+            width: 100%;
+            height: auto;
+        }
+        
+        .image-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-copy {
+            background: #333;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #555;
+        }
+        
+        .btn-download {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background: #45a049;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .palette-image-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e0e0e0;
+            transition: border-color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .palette-image-section {
+                border-top-color: #444;
+            }
+        }
+        
+        .palette-image-section h2 {
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .palette-image-section h2 {
+                color: #e0e0e0;
+            }
+        }
+        
+        .image-section h3 {
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .image-section h3 {
+                color: #e0e0e0;
+            }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #333;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Color Palette</h1>
+        <div id="toast" class="toast"></div>
+
+        <div class="color-group">
+            <div class="color-header">
+                <div class="color-swatch" style="background-color: #e70000;"></div>
+                <div class="color-info">
+                    <h2>FIRE RED</h2>
+                    <div class="color-details">
+                        <span><strong>HEX:</strong> <code>#e70000</code></span>
+                        <span><strong>RGB:</strong> <code>rgb(231, 0, 0)</code></span>
+                        <span><strong>HSL:</strong> <code>hsl(0.0, 100.0%, 45.3%)</code></span>
+                    </div>
+                </div>
+            </div>
+            <div class="shades-grid">
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #ffe5e5;"></div>
+                    <div class="shade-label">50</div>
+                    <div class="shade-hex">#ffe5e5</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #ffb2b2;"></div>
+                    <div class="shade-label">100</div>
+                    <div class="shade-hex">#ffb2b2</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #ff7f7f;"></div>
+                    <div class="shade-label">200</div>
+                    <div class="shade-hex">#ff7f7f</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #fe4c4c;"></div>
+                    <div class="shade-label">300</div>
+                    <div class="shade-hex">#fe4c4c</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #ff1919;"></div>
+                    <div class="shade-label">400</div>
+                    <div class="shade-hex">#ff1919</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #e70000;"></div>
+                    <div class="shade-label">500</div>
+                    <div class="shade-hex">#e70000</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #e50000;"></div>
+                    <div class="shade-label">600</div>
+                    <div class="shade-hex">#e50000</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #b20000;"></div>
+                    <div class="shade-label">700</div>
+                    <div class="shade-hex">#b20000</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #7f0000;"></div>
+                    <div class="shade-label">800</div>
+                    <div class="shade-hex">#7f0000</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #4c0000;"></div>
+                    <div class="shade-label">900</div>
+                    <div class="shade-hex">#4c0000</div>
+                </div>
+
+            </div>
+            <div class="image-section">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
+                <div class="image-container">
+                    <img src="fire-red.png" alt="FIRE RED color swatch" class="color-image" id="img-fire-red">
+                    <div class="image-actions">
+                        <button class="btn btn-copy" onclick="copyImage('fire-red.png')">
+                            📋 Copy Image
+                        </button>
+                        <button class="btn btn-download" onclick="downloadImage('fire-red.png', 'FIRE_RED_swatch.png')">
+                            💾 Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-group">
+            <div class="color-header">
+                <div class="color-swatch" style="background-color: #2a075b;"></div>
+                <div class="color-info">
+                    <h2>ROYAL PURPLE</h2>
+                    <div class="color-details">
+                        <span><strong>HEX:</strong> <code>#2a075b</code></span>
+                        <span><strong>RGB:</strong> <code>rgb(42, 7, 91)</code></span>
+                        <span><strong>HSL:</strong> <code>hsl(265.0, 85.7%, 19.2%)</code></span>
+                    </div>
+                </div>
+            </div>
+            <div class="shades-grid">
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #f0e7fd;"></div>
+                    <div class="shade-label">50</div>
+                    <div class="shade-hex">#f0e7fd</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #d3b7f9;"></div>
+                    <div class="shade-label">100</div>
+                    <div class="shade-hex">#d3b7f9</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #b688f5;"></div>
+                    <div class="shade-label">200</div>
+                    <div class="shade-hex">#b688f5</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #9959f2;"></div>
+                    <div class="shade-label">300</div>
+                    <div class="shade-hex">#9959f2</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #7b29ee;"></div>
+                    <div class="shade-label">400</div>
+                    <div class="shade-hex">#7b29ee</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #29075b;"></div>
+                    <div class="shade-label">500</div>
+                    <div class="shade-hex">#29075b</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #6210d5;"></div>
+                    <div class="shade-label">600</div>
+                    <div class="shade-hex">#6210d5</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #4c0ca5;"></div>
+                    <div class="shade-label">700</div>
+                    <div class="shade-hex">#4c0ca5</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #360976;"></div>
+                    <div class="shade-label">800</div>
+                    <div class="shade-hex">#360976</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #200547;"></div>
+                    <div class="shade-label">900</div>
+                    <div class="shade-hex">#200547</div>
+                </div>
+
+            </div>
+            <div class="image-section">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
+                <div class="image-container">
+                    <img src="royal-purple.png" alt="ROYAL PURPLE color swatch" class="color-image" id="img-royal-purple">
+                    <div class="image-actions">
+                        <button class="btn btn-copy" onclick="copyImage('royal-purple.png')">
+                            📋 Copy Image
+                        </button>
+                        <button class="btn btn-download" onclick="downloadImage('royal-purple.png', 'ROYAL_PURPLE_swatch.png')">
+                            💾 Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-group">
+            <div class="color-header">
+                <div class="color-swatch" style="background-color: #91e643;"></div>
+                <div class="color-info">
+                    <h2>INCINERATOR GREEN</h2>
+                    <div class="color-details">
+                        <span><strong>HEX:</strong> <code>#91e643</code></span>
+                        <span><strong>RGB:</strong> <code>rgb(145, 230, 67)</code></span>
+                        <span><strong>HSL:</strong> <code>hsl(91.3, 76.5%, 58.2%)</code></span>
+                    </div>
+                </div>
+            </div>
+            <div class="shades-grid">
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #f1fce8;"></div>
+                    <div class="shade-label">50</div>
+                    <div class="shade-hex">#f1fce8</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #d7f6bb;"></div>
+                    <div class="shade-label">100</div>
+                    <div class="shade-hex">#d7f6bb</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #bdf08e;"></div>
+                    <div class="shade-label">200</div>
+                    <div class="shade-hex">#bdf08e</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #a2ea61;"></div>
+                    <div class="shade-label">300</div>
+                    <div class="shade-hex">#a2ea61</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #88e434;"></div>
+                    <div class="shade-label">400</div>
+                    <div class="shade-hex">#88e434</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #91e543;"></div>
+                    <div class="shade-label">500</div>
+                    <div class="shade-hex">#91e543</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #6eca1a;"></div>
+                    <div class="shade-label">600</div>
+                    <div class="shade-hex">#6eca1a</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #569d14;"></div>
+                    <div class="shade-label">700</div>
+                    <div class="shade-hex">#569d14</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #3d700e;"></div>
+                    <div class="shade-label">800</div>
+                    <div class="shade-hex">#3d700e</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #244308;"></div>
+                    <div class="shade-label">900</div>
+                    <div class="shade-hex">#244308</div>
+                </div>
+
+            </div>
+            <div class="image-section">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
+                <div class="image-container">
+                    <img src="incinerator-green.png" alt="INCINERATOR GREEN color swatch" class="color-image" id="img-incinerator-green">
+                    <div class="image-actions">
+                        <button class="btn btn-copy" onclick="copyImage('incinerator-green.png')">
+                            📋 Copy Image
+                        </button>
+                        <button class="btn btn-download" onclick="downloadImage('incinerator-green.png', 'INCINERATOR_GREEN_swatch.png')">
+                            💾 Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-group">
+            <div class="color-header">
+                <div class="color-swatch" style="background-color: #0a0a0a;"></div>
+                <div class="color-info">
+                    <h2>NIGHT BLACK</h2>
+                    <div class="color-details">
+                        <span><strong>HEX:</strong> <code>#0a0a0a</code></span>
+                        <span><strong>RGB:</strong> <code>rgb(10, 10, 10)</code></span>
+                        <span><strong>HSL:</strong> <code>hsl(0.0, 0.0%, 3.9%)</code></span>
+                    </div>
+                </div>
+            </div>
+            <div class="shades-grid">
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #f2f2f2;"></div>
+                    <div class="shade-label">50</div>
+                    <div class="shade-hex">#f2f2f2</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #d8d8d8;"></div>
+                    <div class="shade-label">100</div>
+                    <div class="shade-hex">#d8d8d8</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #bfbfbf;"></div>
+                    <div class="shade-label">200</div>
+                    <div class="shade-hex">#bfbfbf</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #a5a5a5;"></div>
+                    <div class="shade-label">300</div>
+                    <div class="shade-hex">#a5a5a5</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #8c8c8c;"></div>
+                    <div class="shade-label">400</div>
+                    <div class="shade-hex">#8c8c8c</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #0a0a0a;"></div>
+                    <div class="shade-label">500</div>
+                    <div class="shade-hex">#0a0a0a</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #727272;"></div>
+                    <div class="shade-label">600</div>
+                    <div class="shade-hex">#727272</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #595959;"></div>
+                    <div class="shade-label">700</div>
+                    <div class="shade-hex">#595959</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #3f3f3f;"></div>
+                    <div class="shade-label">800</div>
+                    <div class="shade-hex">#3f3f3f</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #262626;"></div>
+                    <div class="shade-label">900</div>
+                    <div class="shade-hex">#262626</div>
+                </div>
+
+            </div>
+            <div class="image-section">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
+                <div class="image-container">
+                    <img src="night-black.png" alt="NIGHT BLACK color swatch" class="color-image" id="img-night-black">
+                    <div class="image-actions">
+                        <button class="btn btn-copy" onclick="copyImage('night-black.png')">
+                            📋 Copy Image
+                        </button>
+                        <button class="btn btn-download" onclick="downloadImage('night-black.png', 'NIGHT_BLACK_swatch.png')">
+                            💾 Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-group">
+            <div class="color-header">
+                <div class="color-swatch" style="background-color: #ffffff;"></div>
+                <div class="color-info">
+                    <h2>BRIGHT WHITE</h2>
+                    <div class="color-details">
+                        <span><strong>HEX:</strong> <code>#ffffff</code></span>
+                        <span><strong>RGB:</strong> <code>rgb(255, 255, 255)</code></span>
+                        <span><strong>HSL:</strong> <code>hsl(0.0, 0.0%, 100.0%)</code></span>
+                    </div>
+                </div>
+            </div>
+            <div class="shades-grid">
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #f2f2f2;"></div>
+                    <div class="shade-label">50</div>
+                    <div class="shade-hex">#f2f2f2</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #d8d8d8;"></div>
+                    <div class="shade-label">100</div>
+                    <div class="shade-hex">#d8d8d8</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #bfbfbf;"></div>
+                    <div class="shade-label">200</div>
+                    <div class="shade-hex">#bfbfbf</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #a5a5a5;"></div>
+                    <div class="shade-label">300</div>
+                    <div class="shade-hex">#a5a5a5</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #8c8c8c;"></div>
+                    <div class="shade-label">400</div>
+                    <div class="shade-hex">#8c8c8c</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #ffffff;"></div>
+                    <div class="shade-label">500</div>
+                    <div class="shade-hex">#ffffff</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #727272;"></div>
+                    <div class="shade-label">600</div>
+                    <div class="shade-hex">#727272</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #595959;"></div>
+                    <div class="shade-label">700</div>
+                    <div class="shade-hex">#595959</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #3f3f3f;"></div>
+                    <div class="shade-label">800</div>
+                    <div class="shade-hex">#3f3f3f</div>
+                </div>
+
+                <div class="shade-item">
+                    <div class="shade-swatch" style="background-color: #262626;"></div>
+                    <div class="shade-label">900</div>
+                    <div class="shade-hex">#262626</div>
+                </div>
+
+            </div>
+            <div class="image-section">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
+                <div class="image-container">
+                    <img src="bright-white.png" alt="BRIGHT WHITE color swatch" class="color-image" id="img-bright-white">
+                    <div class="image-actions">
+                        <button class="btn btn-copy" onclick="copyImage('bright-white.png')">
+                            📋 Copy Image
+                        </button>
+                        <button class="btn btn-download" onclick="downloadImage('bright-white.png', 'BRIGHT_WHITE_swatch.png')">
+                            💾 Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-group palette-image-section">
+            <h2 style="margin-bottom: 1.5rem;">Complete Palette</h2>
+            <div class="image-container">
+                <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
+                <div class="image-actions">
+                    <button class="btn btn-copy" onclick="copyImage('palette.png')">
+                        📋 Copy Image
+                    </button>
+                    <button class="btn btn-download" onclick="downloadImage('palette.png', 'color_palette.png')">
+                        💾 Download Image
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        async function copyImage(imagePath) {
+            try {
+                const response = await fetch(imagePath);
+                const blob = await response.blob();
+                await navigator.clipboard.write([
+                    new ClipboardItem({ [blob.type]: blob })
+                ]);
+                showToast('Image copied to clipboard!');
+            } catch (err) {
+                console.error('Failed to copy image:', err);
+                showToast('Failed to copy image. Try downloading instead.');
+            }
+        }
+        
+        function downloadImage(imagePath, filename) {
+            const link = document.createElement('a');
+            link.href = imagePath;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Image downloaded!');
+        }
+    </script>
+</body>
+</html>

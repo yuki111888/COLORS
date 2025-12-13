@@ -30,6 +30,21 @@
   --color-royal-purple-700: #4c0ca5;
   --color-royal-purple-800: #360976;
   --color-royal-purple-900: #200547;
+  --color-incinerator-green: #91e643;
+  --color-incinerator-green-rgb: 145, 230, 67;
+  --color-incinerator-green-hsl: 91.3, 76.5%, 58.2%;
+
+  /* INCINERATOR GREEN Shades */
+  --color-incinerator-green-50: #f1fce8;
+  --color-incinerator-green-100: #d7f6bb;
+  --color-incinerator-green-200: #bdf08e;
+  --color-incinerator-green-300: #a2ea61;
+  --color-incinerator-green-400: #88e434;
+  --color-incinerator-green-500: #91e543;
+  --color-incinerator-green-600: #6eca1a;
+  --color-incinerator-green-700: #569d14;
+  --color-incinerator-green-800: #3d700e;
+  --color-incinerator-green-900: #244308;
   --color-night-black: #0a0a0a;
   --color-night-black-rgb: 10, 10, 10;
   --color-night-black-hsl: 0.0, 0.0%, 3.9%;
@@ -69,6 +84,9 @@
 .bg-royal-purple { background-color: var(--color-royal-purple); }
 .text-royal-purple { color: var(--color-royal-purple); }
 .border-royal-purple { border-color: var(--color-royal-purple); }
+.bg-incinerator-green { background-color: var(--color-incinerator-green); }
+.text-incinerator-green { color: var(--color-incinerator-green); }
+.border-incinerator-green { border-color: var(--color-incinerator-green); }
 .bg-night-black { background-color: var(--color-night-black); }
 .text-night-black { color: var(--color-night-black); }
 .border-night-black { border-color: var(--color-night-black); }

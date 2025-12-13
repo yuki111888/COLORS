@@ -108,7 +108,7 @@ def generate_html_preview(colors):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Palette Preview</title>
+    <title>Color Palette</title>
     <link rel="stylesheet" href="palette.css">
     <style>
         * {
@@ -122,6 +122,15 @@ def generate_html_preview(colors):
             background: #f5f5f5;
             padding: 2rem;
             line-height: 1.6;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+                color: #e0e0e0;
+            }
         }
         
         .container {
@@ -133,6 +142,13 @@ def generate_html_preview(colors):
             color: #333;
             margin-bottom: 2rem;
             font-size: 2.5rem;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            h1 {
+                color: #e0e0e0;
+            }
         }
         
         .color-group {
@@ -141,6 +157,14 @@ def generate_html_preview(colors):
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .color-group {
+                background: #2a2a2a;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            }
         }
         
         .color-header {
@@ -160,6 +184,14 @@ def generate_html_preview(colors):
         .color-info h2 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .color-info h2 {
+                color: #e0e0e0;
+            }
         }
         
         .color-details {
@@ -167,6 +199,13 @@ def generate_html_preview(colors):
             gap: 1rem;
             font-size: 0.9rem;
             color: #666;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .color-details {
+                color: #b0b0b0;
+            }
         }
         
         .shades-grid {
@@ -192,12 +231,26 @@ def generate_html_preview(colors):
             font-size: 0.75rem;
             color: #666;
             font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .shade-label {
+                color: #b0b0b0;
+            }
         }
         
         .shade-hex {
             font-size: 0.7rem;
             color: #999;
             font-family: 'Monaco', 'Courier New', monospace;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .shade-hex {
+                color: #888;
+            }
         }
         
         code {
@@ -206,12 +259,28 @@ def generate_html_preview(colors):
             border-radius: 4px;
             font-family: 'Monaco', 'Courier New', monospace;
             font-size: 0.85em;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            code {
+                background: #3a3a3a;
+                color: #e0e0e0;
+            }
         }
         
         .image-section {
             margin-top: 2rem;
             padding-top: 2rem;
             border-top: 1px solid #e0e0e0;
+            transition: border-color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .image-section {
+                border-top-color: #444;
+            }
         }
         
         .image-container {
@@ -280,6 +349,35 @@ def generate_html_preview(colors):
             margin-top: 3rem;
             padding-top: 2rem;
             border-top: 2px solid #e0e0e0;
+            transition: border-color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .palette-image-section {
+                border-top-color: #444;
+            }
+        }
+        
+        .palette-image-section h2 {
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .palette-image-section h2 {
+                color: #e0e0e0;
+            }
+        }
+        
+        .image-section h3 {
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .image-section h3 {
+                color: #e0e0e0;
+            }
         }
         
         .toast {
@@ -712,7 +810,7 @@ def main():
     
     print("Generating HTML preview...")
     html_content = generate_html_preview(colors)
-    with open('preview.html', 'w') as f:
+    with open('index.html', 'w') as f:
         f.write(html_content)
     
     print("Generating brand guidelines...")
@@ -743,13 +841,13 @@ def main():
     
     print("\n✅ All files generated successfully!")
     print("  - palette.css (CSS variables and utilities)")
-    print("  - preview.html (Visual preview)")
+    print("  - index.html (Visual preview)")
     print("  - GUIDELINES.md (Brand guidelines)")
     print("  - tailwind.config.js (Tailwind CSS configuration)")
     if HAS_PIL:
         print("  - Individual color swatch images (.png)")
         print("  - Complete palette image (palette.png)")
-    print("\nOpen preview.html in your browser to see the palette!")
+    print("\nOpen index.html in your browser to see the palette!")
 
 if __name__ == '__main__':
     main()

@@ -17,10 +17,11 @@ A simple tool to generate beautiful color palettes, CSS variables, and brand gui
    ```
 
 3. **View your palette**:
-   Open `preview.html` in your browser to see a visual preview of all your colors and their shades.
+   Open `index.html` in your browser to see a visual preview of all your colors and their shades.
    - Each color has a downloadable swatch image (like Adobe's color tool)
    - Copy images to clipboard or download them locally
    - View the complete palette as a single image
+   - Automatically adapts to your OS dark/light mode preference
 
 ## File Format
 
@@ -41,7 +42,7 @@ Examples:
 After running the generator, you'll get:
 
 - **`palette.css`** - CSS variables and utility classes for all your colors
-- **`preview.html`** - Interactive preview with copy/download buttons for images
+- **`index.html`** - Interactive preview with copy/download buttons for images (supports dark/light mode)
 - **`GUIDELINES.md`** - Brand guidelines and usage recommendations
 - **`tailwind.config.js`** - Tailwind CSS configuration with your color palette
 - **Individual color swatch images** - PNG files for each color (e.g., `fire-red.png`)
@@ -107,7 +108,7 @@ All shades (50-900) are available for each color:
 1. Discover a new color you love
 2. Add it to `colors.txt` with a descriptive name
 3. Run `python3 generate_palette.py`
-4. Check `preview.html` to see how it looks
+4. Check `index.html` to see how it looks
 5. Use the CSS variables in your projects!
 
 ## Tips

@@ -41,6 +41,24 @@ This document outlines the color palette and usage guidelines for the brand.
 
 ---
 
+### INCINERATOR GREEN
+
+**Hex:** `#91e643`  
+**RGB:** `rgb(145, 230, 67)`  
+**HSL:** `hsl(91.3, 76.5%, 58.2%)`  
+**CSS Variable:** `var(--color-incinerator-green)`
+
+**Usage:**
+- Primary brand color
+- Use for key CTAs and important elements
+- Maintains brand identity
+
+**Shades Available:**
+- 50 (lightest) to 900 (darkest)
+- Access via CSS variable: `var(--color-incinerator-green-[50-900])`
+
+---
+
 ### NIGHT BLACK
 
 **Hex:** `#0a0a0a`  
