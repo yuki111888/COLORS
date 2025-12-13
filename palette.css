@@ -1,0 +1,77 @@
+:root {
+  /* Primary Colors */
+  --color-fire-red: #e70000;
+  --color-fire-red-rgb: 231, 0, 0;
+  --color-fire-red-hsl: 0.0, 100.0%, 45.3%;
+
+  /* FIRE RED Shades */
+  --color-fire-red-50: #ffe5e5;
+  --color-fire-red-100: #ffb2b2;
+  --color-fire-red-200: #ff7f7f;
+  --color-fire-red-300: #fe4c4c;
+  --color-fire-red-400: #ff1919;
+  --color-fire-red-500: #e70000;
+  --color-fire-red-600: #e50000;
+  --color-fire-red-700: #b20000;
+  --color-fire-red-800: #7f0000;
+  --color-fire-red-900: #4c0000;
+  --color-royal-purple: #2a075b;
+  --color-royal-purple-rgb: 42, 7, 91;
+  --color-royal-purple-hsl: 265.0, 85.7%, 19.2%;
+
+  /* ROYAL PURPLE Shades */
+  --color-royal-purple-50: #f0e7fd;
+  --color-royal-purple-100: #d3b7f9;
+  --color-royal-purple-200: #b688f5;
+  --color-royal-purple-300: #9959f2;
+  --color-royal-purple-400: #7b29ee;
+  --color-royal-purple-500: #29075b;
+  --color-royal-purple-600: #6210d5;
+  --color-royal-purple-700: #4c0ca5;
+  --color-royal-purple-800: #360976;
+  --color-royal-purple-900: #200547;
+  --color-night-black: #0a0a0a;
+  --color-night-black-rgb: 10, 10, 10;
+  --color-night-black-hsl: 0.0, 0.0%, 3.9%;
+
+  /* NIGHT BLACK Shades */
+  --color-night-black-50: #f2f2f2;
+  --color-night-black-100: #d8d8d8;
+  --color-night-black-200: #bfbfbf;
+  --color-night-black-300: #a5a5a5;
+  --color-night-black-400: #8c8c8c;
+  --color-night-black-500: #0a0a0a;
+  --color-night-black-600: #727272;
+  --color-night-black-700: #595959;
+  --color-night-black-800: #3f3f3f;
+  --color-night-black-900: #262626;
+  --color-bright-white: #ffffff;
+  --color-bright-white-rgb: 255, 255, 255;
+  --color-bright-white-hsl: 0.0, 0.0%, 100.0%;
+
+  /* BRIGHT WHITE Shades */
+  --color-bright-white-50: #f2f2f2;
+  --color-bright-white-100: #d8d8d8;
+  --color-bright-white-200: #bfbfbf;
+  --color-bright-white-300: #a5a5a5;
+  --color-bright-white-400: #8c8c8c;
+  --color-bright-white-500: #ffffff;
+  --color-bright-white-600: #727272;
+  --color-bright-white-700: #595959;
+  --color-bright-white-800: #3f3f3f;
+  --color-bright-white-900: #262626;
+}
+
+/* Utility Classes */
+.bg-fire-red { background-color: var(--color-fire-red); }
+.text-fire-red { color: var(--color-fire-red); }
+.border-fire-red { border-color: var(--color-fire-red); }
+.bg-royal-purple { background-color: var(--color-royal-purple); }
+.text-royal-purple { color: var(--color-royal-purple); }
+.border-royal-purple { border-color: var(--color-royal-purple); }
+.bg-night-black { background-color: var(--color-night-black); }
+.text-night-black { color: var(--color-night-black); }
+.border-night-black { border-color: var(--color-night-black); }
+.bg-bright-white { background-color: var(--color-bright-white); }
+.text-bright-white { color: var(--color-bright-white); }
+.border-bright-white { border-color: var(--color-bright-white); }
