@@ -13,279 +13,192 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            padding: 2rem;
-            line-height: 1.6;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            background: #0A0A0A;
+            color: #fff;
+            padding: 0;
+            overflow-x: hidden;
         }
         
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #1a1a1a;
-                color: #e0e0e0;
-            }
+        .header {
+            padding: 0.5rem 1rem;
+            background: #0A0A0A;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .header h1 {
+            font-size: 1rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
         }
         
-        h1 {
-            color: #333;
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            h1 {
-                color: #e0e0e0;
-            }
-        }
-        
-        .color-group {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .color-group {
-                background: #2a2a2a;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            }
-        }
-        
-        .color-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .color-swatch {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .color-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .color-info h2 {
-                color: #e0e0e0;
-            }
-        }
-        
-        .color-details {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9rem;
-            color: #666;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .color-details {
-                color: #b0b0b0;
-            }
-        }
-        
-        .shades-grid {
+        .palette-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0;
         }
         
-        .shade-item {
-            text-align: center;
+        .color-block {
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s, z-index 0.1s;
+            border: none;
         }
         
-        .shade-swatch {
-            width: 100%;
-            height: 80px;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        .color-block:hover:not(.expanded) {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        
+        .color-block.expanded {
+            z-index: 15;
+        }
+        
+        .color-name {
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        
+        .color-hex {
+            font-size: 0.65rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        
+        .shades-container {
+            display: none;
+            position: fixed;
+            top: auto;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            background: #0A0A0A;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            z-index: 20;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0;
+            padding: 0.5rem 0;
+            max-width: 100%;
+        }
+        
+        .color-block.expanded .shades-container {
+            display: grid;
+        }
+        
+        .palette-grid {
+            position: relative;
+        }
+        
+        .color-block.expanded .shades-container {
+            display: grid;
+        }
+        
+        .shade-block {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            min-height: 100px;
         }
         
         .shade-label {
-            font-size: 0.75rem;
-            color: #666;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .shade-label {
-                color: #b0b0b0;
-            }
+            font-size: 0.6rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+            font-weight: bold;
         }
         
         .shade-hex {
+            font-size: 0.55rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+        
+        .palette-image-section {
+            margin-top: 0;
+            padding: 0.5rem 1rem;
+            background: #0A0A0A;
+            border-top: 1px solid #1a1a1a;
+        }
+        
+        .palette-image-section h2 {
             font-size: 0.7rem;
-            color: #999;
-            font-family: 'Monaco', 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .shade-hex {
-                color: #888;
-            }
-        }
-        
-        code {
-            background: #f0f0f0;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.85em;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            code {
-                background: #3a3a3a;
-                color: #e0e0e0;
-            }
-        }
-        
-        .image-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e0e0e0;
-            transition: border-color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .image-section {
-                border-top-color: #444;
-            }
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 0.5rem;
         }
         
         .image-container {
             position: relative;
-            display: block;
-            margin: 1rem 0;
-        }
-        
-        .palette-image-section .image-container {
-            margin: 0;
         }
         
         .color-image {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        .palette-image-section .color-image {
             width: 100%;
             height: auto;
+            display: block;
         }
         
         .image-actions {
             display: flex;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
         
         .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.65rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
         }
         
-        .btn-copy {
-            background: #333;
-            color: white;
-        }
-        
-        .btn-copy:hover {
-            background: #555;
-        }
-        
-        .btn-download {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .btn-download:hover {
-            background: #45a049;
+        .btn:hover {
+            background: #2a2a2a;
+            border-color: #444;
         }
         
         .btn:active {
-            transform: scale(0.98);
-        }
-        
-        .palette-image-section {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e0e0e0;
-            transition: border-color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .palette-image-section {
-                border-top-color: #444;
-            }
-        }
-        
-        .palette-image-section h2 {
-            color: #333;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .palette-image-section h2 {
-                color: #e0e0e0;
-            }
-        }
-        
-        .image-section h3 {
-            color: #333;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .image-section h3 {
-                color: #e0e0e0;
-            }
+            transform: scale(0.95);
         }
         
         .toast {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #333;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            bottom: 1rem;
+            right: 1rem;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
+            font-size: 0.7rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(10px);
             transition: all 0.3s;
             z-index: 1000;
         }
@@ -297,572 +210,372 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Color Palette</h1>
+    <div class="header">
+        <h1>COLOR PALETTE</h1>
+    </div>
+    <div class="palette-grid" id="paletteGrid">
         <div id="toast" class="toast"></div>
 
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: #e70000;"></div>
-                <div class="color-info">
-                    <h2>FIRE RED</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>#e70000</code></span>
-                        <span><strong>RGB:</strong> <code>rgb(231, 0, 0)</code></span>
-                        <span><strong>HSL:</strong> <code>hsl(0.0, 100.0%, 45.3%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: #e70000;" onclick="toggleShades(this)">
+            <div class="color-name" style="color: #FFFFFF;">FIRE RED</div>
+            <div class="color-hex" style="color: #FFFFFF;">#E70000</div>
+            <div class="shades-container">
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #ffe5e5;"></div>
-                    <div class="shade-label">50</div>
-                    <div class="shade-hex">#ffe5e5</div>
+                <div class="shade-block" style="background-color: #fff1f1;" onclick="event.stopPropagation(); copyHex('#fff1f1')">
+                    <div class="shade-label" style="color: #000000;">50</div>
+                    <div class="shade-hex" style="color: #000000;">#FFF1F1</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #ffb2b2;"></div>
-                    <div class="shade-label">100</div>
-                    <div class="shade-hex">#ffb2b2</div>
+                <div class="shade-block" style="background-color: #ffd5d5;" onclick="event.stopPropagation(); copyHex('#ffd5d5')">
+                    <div class="shade-label" style="color: #000000;">100</div>
+                    <div class="shade-hex" style="color: #000000;">#FFD5D5</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #ff7f7f;"></div>
-                    <div class="shade-label">200</div>
-                    <div class="shade-hex">#ff7f7f</div>
+                <div class="shade-block" style="background-color: #ffabab;" onclick="event.stopPropagation(); copyHex('#ffabab')">
+                    <div class="shade-label" style="color: #000000;">200</div>
+                    <div class="shade-hex" style="color: #000000;">#FFABAB</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #fe4c4c;"></div>
-                    <div class="shade-label">300</div>
-                    <div class="shade-hex">#fe4c4c</div>
+                <div class="shade-block" style="background-color: #ff7373;" onclick="event.stopPropagation(); copyHex('#ff7373')">
+                    <div class="shade-label" style="color: #000000;">300</div>
+                    <div class="shade-hex" style="color: #000000;">#FF7373</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #ff1919;"></div>
-                    <div class="shade-label">400</div>
-                    <div class="shade-hex">#ff1919</div>
+                <div class="shade-block" style="background-color: #ff3b3b;" onclick="event.stopPropagation(); copyHex('#ff3b3b')">
+                    <div class="shade-label" style="color: #FFFFFF;">400</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#FF3B3B</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #e70000;"></div>
-                    <div class="shade-label">500</div>
-                    <div class="shade-hex">#e70000</div>
+                <div class="shade-block" style="background-color: #e70000;" onclick="event.stopPropagation(); copyHex('#e70000')">
+                    <div class="shade-label" style="color: #FFFFFF;">500</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#E70000</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #e50000;"></div>
-                    <div class="shade-label">600</div>
-                    <div class="shade-hex">#e50000</div>
+                <div class="shade-block" style="background-color: #a10000;" onclick="event.stopPropagation(); copyHex('#a10000')">
+                    <div class="shade-label" style="color: #FFFFFF;">600</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#A10000</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #b20000;"></div>
-                    <div class="shade-label">700</div>
-                    <div class="shade-hex">#b20000</div>
+                <div class="shade-block" style="background-color: #730000;" onclick="event.stopPropagation(); copyHex('#730000')">
+                    <div class="shade-label" style="color: #FFFFFF;">700</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#730000</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #7f0000;"></div>
-                    <div class="shade-label">800</div>
-                    <div class="shade-hex">#7f0000</div>
+                <div class="shade-block" style="background-color: #450000;" onclick="event.stopPropagation(); copyHex('#450000')">
+                    <div class="shade-label" style="color: #FFFFFF;">800</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#450000</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #4c0000;"></div>
-                    <div class="shade-label">900</div>
-                    <div class="shade-hex">#4c0000</div>
+                <div class="shade-block" style="background-color: #220000;" onclick="event.stopPropagation(); copyHex('#220000')">
+                    <div class="shade-label" style="color: #FFFFFF;">900</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#220000</div>
                 </div>
 
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="fire-red.png" alt="FIRE RED color swatch" class="color-image" id="img-fire-red">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('fire-red.png')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('fire-red.png', 'FIRE_RED_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: #2a075b;"></div>
-                <div class="color-info">
-                    <h2>ROYAL PURPLE</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>#2a075b</code></span>
-                        <span><strong>RGB:</strong> <code>rgb(42, 7, 91)</code></span>
-                        <span><strong>HSL:</strong> <code>hsl(265.0, 85.7%, 19.2%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: #2a075b;" onclick="toggleShades(this)">
+            <div class="color-name" style="color: #FFFFFF;">ROYAL PURPLE</div>
+            <div class="color-hex" style="color: #FFFFFF;">#2A075B</div>
+            <div class="shades-container">
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #f0e7fd;"></div>
-                    <div class="shade-label">50</div>
-                    <div class="shade-hex">#f0e7fd</div>
+                <div class="shade-block" style="background-color: #f3ebfd;" onclick="event.stopPropagation(); copyHex('#f3ebfd')">
+                    <div class="shade-label" style="color: #000000;">50</div>
+                    <div class="shade-hex" style="color: #000000;">#F3EBFD</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #d3b7f9;"></div>
-                    <div class="shade-label">100</div>
-                    <div class="shade-hex">#d3b7f9</div>
+                <div class="shade-block" style="background-color: #dbc5fa;" onclick="event.stopPropagation(); copyHex('#dbc5fa')">
+                    <div class="shade-label" style="color: #000000;">100</div>
+                    <div class="shade-hex" style="color: #000000;">#DBC5FA</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #b688f5;"></div>
-                    <div class="shade-label">200</div>
-                    <div class="shade-hex">#b688f5</div>
+                <div class="shade-block" style="background-color: #b88cf6;" onclick="event.stopPropagation(); copyHex('#b88cf6')">
+                    <div class="shade-label" style="color: #000000;">200</div>
+                    <div class="shade-hex" style="color: #000000;">#B88CF6</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #9959f2;"></div>
-                    <div class="shade-label">300</div>
-                    <div class="shade-hex">#9959f2</div>
+                <div class="shade-block" style="background-color: #893ff0;" onclick="event.stopPropagation(); copyHex('#893ff0')">
+                    <div class="shade-label" style="color: #FFFFFF;">300</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#893FF0</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #7b29ee;"></div>
-                    <div class="shade-label">400</div>
-                    <div class="shade-hex">#7b29ee</div>
+                <div class="shade-block" style="background-color: #5e0fcd;" onclick="event.stopPropagation(); copyHex('#5e0fcd')">
+                    <div class="shade-label" style="color: #FFFFFF;">400</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#5E0FCD</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #29075b;"></div>
-                    <div class="shade-label">500</div>
-                    <div class="shade-hex">#29075b</div>
+                <div class="shade-block" style="background-color: #2a075b;" onclick="event.stopPropagation(); copyHex('#2a075b')">
+                    <div class="shade-label" style="color: #FFFFFF;">500</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#2A075B</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #6210d5;"></div>
-                    <div class="shade-label">600</div>
-                    <div class="shade-hex">#6210d5</div>
+                <div class="shade-block" style="background-color: #1d043f;" onclick="event.stopPropagation(); copyHex('#1d043f')">
+                    <div class="shade-label" style="color: #FFFFFF;">600</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#1D043F</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #4c0ca5;"></div>
-                    <div class="shade-label">700</div>
-                    <div class="shade-hex">#4c0ca5</div>
+                <div class="shade-block" style="background-color: #14032d;" onclick="event.stopPropagation(); copyHex('#14032d')">
+                    <div class="shade-label" style="color: #FFFFFF;">700</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#14032D</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #360976;"></div>
-                    <div class="shade-label">800</div>
-                    <div class="shade-hex">#360976</div>
+                <div class="shade-block" style="background-color: #0c021b;" onclick="event.stopPropagation(); copyHex('#0c021b')">
+                    <div class="shade-label" style="color: #FFFFFF;">800</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#0C021B</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #200547;"></div>
-                    <div class="shade-label">900</div>
-                    <div class="shade-hex">#200547</div>
+                <div class="shade-block" style="background-color: #06010d;" onclick="event.stopPropagation(); copyHex('#06010d')">
+                    <div class="shade-label" style="color: #FFFFFF;">900</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#06010D</div>
                 </div>
 
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="royal-purple.png" alt="ROYAL PURPLE color swatch" class="color-image" id="img-royal-purple">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('royal-purple.png')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('royal-purple.png', 'ROYAL_PURPLE_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: #91e643;"></div>
-                <div class="color-info">
-                    <h2>INCINERATOR GREEN</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>#91e643</code></span>
-                        <span><strong>RGB:</strong> <code>rgb(145, 230, 67)</code></span>
-                        <span><strong>HSL:</strong> <code>hsl(91.3, 76.5%, 58.2%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: #91e643;" onclick="toggleShades(this)">
+            <div class="color-name" style="color: #000000;">INCINERATOR GREEN</div>
+            <div class="color-hex" style="color: #000000;">#91E643</div>
+            <div class="shades-container">
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #f1fce8;"></div>
-                    <div class="shade-label">50</div>
-                    <div class="shade-hex">#f1fce8</div>
+                <div class="shade-block" style="background-color: #f9fdf5;" onclick="event.stopPropagation(); copyHex('#f9fdf5')">
+                    <div class="shade-label" style="color: #000000;">50</div>
+                    <div class="shade-hex" style="color: #000000;">#F9FDF5</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #d7f6bb;"></div>
-                    <div class="shade-label">100</div>
-                    <div class="shade-hex">#d7f6bb</div>
+                <div class="shade-block" style="background-color: #eefbe2;" onclick="event.stopPropagation(); copyHex('#eefbe2')">
+                    <div class="shade-label" style="color: #000000;">100</div>
+                    <div class="shade-hex" style="color: #000000;">#EEFBE2</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #bdf08e;"></div>
-                    <div class="shade-label">200</div>
-                    <div class="shade-hex">#bdf08e</div>
+                <div class="shade-block" style="background-color: #def7c6;" onclick="event.stopPropagation(); copyHex('#def7c6')">
+                    <div class="shade-label" style="color: #000000;">200</div>
+                    <div class="shade-hex" style="color: #000000;">#DEF7C6</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #a2ea61;"></div>
-                    <div class="shade-label">300</div>
-                    <div class="shade-hex">#a2ea61</div>
+                <div class="shade-block" style="background-color: #c8f2a1;" onclick="event.stopPropagation(); copyHex('#c8f2a1')">
+                    <div class="shade-label" style="color: #000000;">300</div>
+                    <div class="shade-hex" style="color: #000000;">#C8F2A1</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #88e434;"></div>
-                    <div class="shade-label">400</div>
-                    <div class="shade-hex">#88e434</div>
+                <div class="shade-block" style="background-color: #b2ed7b;" onclick="event.stopPropagation(); copyHex('#b2ed7b')">
+                    <div class="shade-label" style="color: #000000;">400</div>
+                    <div class="shade-hex" style="color: #000000;">#B2ED7B</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #91e543;"></div>
-                    <div class="shade-label">500</div>
-                    <div class="shade-hex">#91e543</div>
+                <div class="shade-block" style="background-color: #91e643;" onclick="event.stopPropagation(); copyHex('#91e643')">
+                    <div class="shade-label" style="color: #000000;">500</div>
+                    <div class="shade-hex" style="color: #000000;">#91E643</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #6eca1a;"></div>
-                    <div class="shade-label">600</div>
-                    <div class="shade-hex">#6eca1a</div>
+                <div class="shade-block" style="background-color: #64b718;" onclick="event.stopPropagation(); copyHex('#64b718')">
+                    <div class="shade-label" style="color: #000000;">600</div>
+                    <div class="shade-hex" style="color: #000000;">#64B718</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #569d14;"></div>
-                    <div class="shade-label">700</div>
-                    <div class="shade-hex">#569d14</div>
+                <div class="shade-block" style="background-color: #478311;" onclick="event.stopPropagation(); copyHex('#478311')">
+                    <div class="shade-label" style="color: #FFFFFF;">700</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#478311</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #3d700e;"></div>
-                    <div class="shade-label">800</div>
-                    <div class="shade-hex">#3d700e</div>
+                <div class="shade-block" style="background-color: #2b4e0a;" onclick="event.stopPropagation(); copyHex('#2b4e0a')">
+                    <div class="shade-label" style="color: #FFFFFF;">800</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#2B4E0A</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #244308;"></div>
-                    <div class="shade-label">900</div>
-                    <div class="shade-hex">#244308</div>
+                <div class="shade-block" style="background-color: #152705;" onclick="event.stopPropagation(); copyHex('#152705')">
+                    <div class="shade-label" style="color: #FFFFFF;">900</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#152705</div>
                 </div>
 
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="incinerator-green.png" alt="INCINERATOR GREEN color swatch" class="color-image" id="img-incinerator-green">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('incinerator-green.png')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('incinerator-green.png', 'INCINERATOR_GREEN_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: #a8c8df;"></div>
-                <div class="color-info">
-                    <h2>ICE BLUE</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>#a8c8df</code></span>
-                        <span><strong>RGB:</strong> <code>rgb(168, 200, 223)</code></span>
-                        <span><strong>HSL:</strong> <code>hsl(205.1, 46.2%, 76.7%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: #a8c8df;" onclick="toggleShades(this)">
+            <div class="color-name" style="color: #000000;">ICE BLUE</div>
+            <div class="color-hex" style="color: #000000;">#A8C8DF</div>
+            <div class="shades-container">
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #ecf3f8;"></div>
-                    <div class="shade-label">50</div>
-                    <div class="shade-hex">#ecf3f8</div>
+                <div class="shade-block" style="background-color: #fafcfd;" onclick="event.stopPropagation(); copyHex('#fafcfd')">
+                    <div class="shade-label" style="color: #000000;">50</div>
+                    <div class="shade-hex" style="color: #000000;">#FAFCFD</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #c7dbea;"></div>
-                    <div class="shade-label">100</div>
-                    <div class="shade-hex">#c7dbea</div>
+                <div class="shade-block" style="background-color: #f1f6fa;" onclick="event.stopPropagation(); copyHex('#f1f6fa')">
+                    <div class="shade-label" style="color: #000000;">100</div>
+                    <div class="shade-hex" style="color: #000000;">#F1F6FA</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #a1c4dc;"></div>
-                    <div class="shade-label">200</div>
-                    <div class="shade-hex">#a1c4dc</div>
+                <div class="shade-block" style="background-color: #e4eef5;" onclick="event.stopPropagation(); copyHex('#e4eef5')">
+                    <div class="shade-label" style="color: #000000;">200</div>
+                    <div class="shade-hex" style="color: #000000;">#E4EEF5</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #7caccf;"></div>
-                    <div class="shade-label">300</div>
-                    <div class="shade-hex">#7caccf</div>
+                <div class="shade-block" style="background-color: #d3e3ef;" onclick="event.stopPropagation(); copyHex('#d3e3ef')">
+                    <div class="shade-label" style="color: #000000;">300</div>
+                    <div class="shade-hex" style="color: #000000;">#D3E3EF</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #5794c1;"></div>
-                    <div class="shade-label">400</div>
-                    <div class="shade-hex">#5794c1</div>
+                <div class="shade-block" style="background-color: #c2d8e8;" onclick="event.stopPropagation(); copyHex('#c2d8e8')">
+                    <div class="shade-label" style="color: #000000;">400</div>
+                    <div class="shade-hex" style="color: #000000;">#C2D8E8</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #a7c7df;"></div>
-                    <div class="shade-label">500</div>
-                    <div class="shade-hex">#a7c7df</div>
+                <div class="shade-block" style="background-color: #a8c8df;" onclick="event.stopPropagation(); copyHex('#a8c8df')">
+                    <div class="shade-label" style="color: #000000;">500</div>
+                    <div class="shade-hex" style="color: #000000;">#A8C8DF</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #3d7ba7;"></div>
-                    <div class="shade-label">600</div>
-                    <div class="shade-hex">#3d7ba7</div>
+                <div class="shade-block" style="background-color: #5291bf;" onclick="event.stopPropagation(); copyHex('#5291bf')">
+                    <div class="shade-label" style="color: #000000;">600</div>
+                    <div class="shade-hex" style="color: #000000;">#5291BF</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #2f5f82;"></div>
-                    <div class="shade-label">700</div>
-                    <div class="shade-hex">#2f5f82</div>
+                <div class="shade-block" style="background-color: #34698e;" onclick="event.stopPropagation(); copyHex('#34698e')">
+                    <div class="shade-label" style="color: #FFFFFF;">700</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#34698E</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #22445d;"></div>
-                    <div class="shade-label">800</div>
-                    <div class="shade-hex">#22445d</div>
+                <div class="shade-block" style="background-color: #1f3f55;" onclick="event.stopPropagation(); copyHex('#1f3f55')">
+                    <div class="shade-label" style="color: #FFFFFF;">800</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#1F3F55</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #142937;"></div>
-                    <div class="shade-label">900</div>
-                    <div class="shade-hex">#142937</div>
+                <div class="shade-block" style="background-color: #0f1f2a;" onclick="event.stopPropagation(); copyHex('#0f1f2a')">
+                    <div class="shade-label" style="color: #FFFFFF;">900</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#0F1F2A</div>
                 </div>
 
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="ice-blue.png" alt="ICE BLUE color swatch" class="color-image" id="img-ice-blue">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('ice-blue.png')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('ice-blue.png', 'ICE_BLUE_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: #0a0a0a;"></div>
-                <div class="color-info">
-                    <h2>NIGHT BLACK</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>#0a0a0a</code></span>
-                        <span><strong>RGB:</strong> <code>rgb(10, 10, 10)</code></span>
-                        <span><strong>HSL:</strong> <code>hsl(0.0, 0.0%, 3.9%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: #0a0a0a;" onclick="toggleShades(this)">
+            <div class="color-name" style="color: #FFFFFF;">NIGHT BLACK</div>
+            <div class="color-hex" style="color: #FFFFFF;">#0A0A0A</div>
+            <div class="shades-container">
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #f2f2f2;"></div>
-                    <div class="shade-label">50</div>
-                    <div class="shade-hex">#f2f2f2</div>
+                <div class="shade-block" style="background-color: #f2f2f2;" onclick="event.stopPropagation(); copyHex('#f2f2f2')">
+                    <div class="shade-label" style="color: #000000;">50</div>
+                    <div class="shade-hex" style="color: #000000;">#F2F2F2</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #d8d8d8;"></div>
-                    <div class="shade-label">100</div>
-                    <div class="shade-hex">#d8d8d8</div>
+                <div class="shade-block" style="background-color: #dadada;" onclick="event.stopPropagation(); copyHex('#dadada')">
+                    <div class="shade-label" style="color: #000000;">100</div>
+                    <div class="shade-hex" style="color: #000000;">#DADADA</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #bfbfbf;"></div>
-                    <div class="shade-label">200</div>
-                    <div class="shade-hex">#bfbfbf</div>
+                <div class="shade-block" style="background-color: #b5b5b5;" onclick="event.stopPropagation(); copyHex('#b5b5b5')">
+                    <div class="shade-label" style="color: #000000;">200</div>
+                    <div class="shade-hex" style="color: #000000;">#B5B5B5</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #a5a5a5;"></div>
-                    <div class="shade-label">300</div>
-                    <div class="shade-hex">#a5a5a5</div>
+                <div class="shade-block" style="background-color: #848484;" onclick="event.stopPropagation(); copyHex('#848484')">
+                    <div class="shade-label" style="color: #000000;">300</div>
+                    <div class="shade-hex" style="color: #000000;">#848484</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #8c8c8c;"></div>
-                    <div class="shade-label">400</div>
-                    <div class="shade-hex">#8c8c8c</div>
+                <div class="shade-block" style="background-color: #535353;" onclick="event.stopPropagation(); copyHex('#535353')">
+                    <div class="shade-label" style="color: #FFFFFF;">400</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#535353</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #0a0a0a;"></div>
-                    <div class="shade-label">500</div>
-                    <div class="shade-hex">#0a0a0a</div>
+                <div class="shade-block" style="background-color: #0a0a0a;" onclick="event.stopPropagation(); copyHex('#0a0a0a')">
+                    <div class="shade-label" style="color: #FFFFFF;">500</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#0A0A0A</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #727272;"></div>
-                    <div class="shade-label">600</div>
-                    <div class="shade-hex">#727272</div>
+                <div class="shade-block" style="background-color: #060606;" onclick="event.stopPropagation(); copyHex('#060606')">
+                    <div class="shade-label" style="color: #FFFFFF;">600</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#060606</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #595959;"></div>
-                    <div class="shade-label">700</div>
-                    <div class="shade-hex">#595959</div>
+                <div class="shade-block" style="background-color: #050505;" onclick="event.stopPropagation(); copyHex('#050505')">
+                    <div class="shade-label" style="color: #FFFFFF;">700</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#050505</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #3f3f3f;"></div>
-                    <div class="shade-label">800</div>
-                    <div class="shade-hex">#3f3f3f</div>
+                <div class="shade-block" style="background-color: #030303;" onclick="event.stopPropagation(); copyHex('#030303')">
+                    <div class="shade-label" style="color: #FFFFFF;">800</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#030303</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #262626;"></div>
-                    <div class="shade-label">900</div>
-                    <div class="shade-hex">#262626</div>
+                <div class="shade-block" style="background-color: #020202;" onclick="event.stopPropagation(); copyHex('#020202')">
+                    <div class="shade-label" style="color: #FFFFFF;">900</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#020202</div>
                 </div>
 
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="night-black.png" alt="NIGHT BLACK color swatch" class="color-image" id="img-night-black">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('night-black.png')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('night-black.png', 'NIGHT_BLACK_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: #ffffff;"></div>
-                <div class="color-info">
-                    <h2>BRIGHT WHITE</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>#ffffff</code></span>
-                        <span><strong>RGB:</strong> <code>rgb(255, 255, 255)</code></span>
-                        <span><strong>HSL:</strong> <code>hsl(0.0, 0.0%, 100.0%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: #ffffff;" onclick="toggleShades(this)">
+            <div class="color-name" style="color: #000000;">BRIGHT WHITE</div>
+            <div class="color-hex" style="color: #000000;">#FFFFFF</div>
+            <div class="shades-container">
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #f2f2f2;"></div>
-                    <div class="shade-label">50</div>
-                    <div class="shade-hex">#f2f2f2</div>
+                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                    <div class="shade-label" style="color: #000000;">50</div>
+                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #d8d8d8;"></div>
-                    <div class="shade-label">100</div>
-                    <div class="shade-hex">#d8d8d8</div>
+                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                    <div class="shade-label" style="color: #000000;">100</div>
+                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #bfbfbf;"></div>
-                    <div class="shade-label">200</div>
-                    <div class="shade-hex">#bfbfbf</div>
+                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                    <div class="shade-label" style="color: #000000;">200</div>
+                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #a5a5a5;"></div>
-                    <div class="shade-label">300</div>
-                    <div class="shade-hex">#a5a5a5</div>
+                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                    <div class="shade-label" style="color: #000000;">300</div>
+                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #8c8c8c;"></div>
-                    <div class="shade-label">400</div>
-                    <div class="shade-hex">#8c8c8c</div>
+                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                    <div class="shade-label" style="color: #000000;">400</div>
+                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #ffffff;"></div>
-                    <div class="shade-label">500</div>
-                    <div class="shade-hex">#ffffff</div>
+                <div class="shade-block" style="background-color: #ffffff;" onclick="event.stopPropagation(); copyHex('#ffffff')">
+                    <div class="shade-label" style="color: #000000;">500</div>
+                    <div class="shade-hex" style="color: #000000;">#FFFFFF</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #727272;"></div>
-                    <div class="shade-label">600</div>
-                    <div class="shade-hex">#727272</div>
+                <div class="shade-block" style="background-color: #b2b2b2;" onclick="event.stopPropagation(); copyHex('#b2b2b2')">
+                    <div class="shade-label" style="color: #000000;">600</div>
+                    <div class="shade-hex" style="color: #000000;">#B2B2B2</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #595959;"></div>
-                    <div class="shade-label">700</div>
-                    <div class="shade-hex">#595959</div>
+                <div class="shade-block" style="background-color: #7f7f7f;" onclick="event.stopPropagation(); copyHex('#7f7f7f')">
+                    <div class="shade-label" style="color: #FFFFFF;">700</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#7F7F7F</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #3f3f3f;"></div>
-                    <div class="shade-label">800</div>
-                    <div class="shade-hex">#3f3f3f</div>
+                <div class="shade-block" style="background-color: #4c4c4c;" onclick="event.stopPropagation(); copyHex('#4c4c4c')">
+                    <div class="shade-label" style="color: #FFFFFF;">800</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#4C4C4C</div>
                 </div>
 
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: #262626;"></div>
-                    <div class="shade-label">900</div>
-                    <div class="shade-hex">#262626</div>
+                <div class="shade-block" style="background-color: #262626;" onclick="event.stopPropagation(); copyHex('#262626')">
+                    <div class="shade-label" style="color: #FFFFFF;">900</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#262626</div>
                 </div>
 
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="bright-white.png" alt="BRIGHT WHITE color swatch" class="color-image" id="img-bright-white">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('bright-white.png')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('bright-white.png', 'BRIGHT_WHITE_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="color-group palette-image-section">
-            <h2 style="margin-bottom: 1.5rem;">Complete Palette</h2>
-            <div class="image-container">
-                <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
-                <div class="image-actions">
-                    <button class="btn btn-copy" onclick="copyImage('palette.png')">
-                        📋 Copy Image
-                    </button>
-                    <button class="btn btn-download" onclick="downloadImage('palette.png', 'color_palette.png')">
-                        💾 Download Image
-                    </button>
-                </div>
             </div>
         </div>
 
     </div>
+    <div class="palette-image-section">
+        <h2>PALETTE IMAGE</h2>
+        <div class="image-container">
+            <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
+            <div class="image-actions">
+                <button class="btn" onclick="copyImage('palette.png')">COPY</button>
+                <button class="btn" onclick="downloadImage('palette.png', 'color_palette.png')">DOWNLOAD</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -873,6 +586,44 @@
             }, 2000);
         }
         
+        function closeAllShades() {
+            document.querySelectorAll('.color-block.expanded').forEach(block => {
+                block.classList.remove('expanded');
+            });
+        }
+        
+        function toggleShades(element) {
+            // Close all other expanded blocks
+            document.querySelectorAll('.color-block.expanded').forEach(block => {
+                if (block !== element) {
+                    block.classList.remove('expanded');
+                }
+            });
+            
+            // Toggle current block
+            element.classList.toggle('expanded');
+            
+            // Position shades container below the clicked block
+            if (element.classList.contains('expanded')) {
+                const shadesContainer = element.querySelector('.shades-container');
+                const rect = element.getBoundingClientRect();
+                shadesContainer.style.top = (rect.bottom + window.scrollY) + 'px';
+            }
+        }
+        
+        // Close shades on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAllShades();
+            }
+        });
+        
+        function copyHex(hex) {
+            navigator.clipboard.writeText(hex).then(() => {
+                showToast('Copied: ' + hex);
+            });
+        }
+        
         async function copyImage(imagePath) {
             try {
                 const response = await fetch(imagePath);
@@ -880,10 +631,10 @@
                 await navigator.clipboard.write([
                     new ClipboardItem({ [blob.type]: blob })
                 ]);
-                showToast('Image copied to clipboard!');
+                showToast('Image copied!');
             } catch (err) {
                 console.error('Failed to copy image:', err);
-                showToast('Failed to copy image. Try downloading instead.');
+                showToast('Copy failed. Try download.');
             }
         }
         
@@ -894,7 +645,7 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('Image downloaded!');
+            showToast('Downloaded!');
         }
     </script>
 </body>

@@ -31,21 +31,65 @@ def hex_to_hsl(hex_color):
     return (h * 360, s * 100, l * 100)
 
 def generate_shades(hex_color, name):
-    """Generate lighter and darker shades of a color."""
+    """Generate lighter and darker shades of a color with proper progression.
+    
+    Shade 500 is always the base color. Lighter shades (50-400) interpolate
+    between white and the base. Darker shades (600-900) interpolate between
+    the base and black.
+    """
     rgb = hex_to_rgb(hex_color)
     r, g, b = [x / 255.0 for x in rgb]
-    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    h, base_l, base_s = colorsys.rgb_to_hls(r, g, b)
     
     shades = {}
-    shade_names = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900']
-    lightness_values = [0.95, 0.85, 0.75, 0.65, 0.55, l, 0.45, 0.35, 0.25, 0.15]
     
-    for shade_name, lightness in zip(shade_names, lightness_values):
-        new_r, new_g, new_b = colorsys.hls_to_rgb(h, lightness, s)
+    # Shade 500 is always the base color
+    shades['500'] = hex_color
+    
+    # Calculate lighter shades (50-400) by interpolating from white (1.0) to base
+    # We use a curve that gives more variation near white
+    lighter_ratios = {
+        '50': 0.05,   # Very close to white
+        '100': 0.15,  # Close to white
+        '200': 0.30,  # Getting closer to base
+        '300': 0.50,  # Midway
+        '400': 0.70   # Close to base
+    }
+    
+    for shade_name, ratio in lighter_ratios.items():
+        # Interpolate: white (1.0) -> base (base_l)
+        # ratio of 0.0 = white, ratio of 1.0 = base
+        lightness = 1.0 - (1.0 - base_l) * ratio
+        
+        # Ensure we stay above base_l and below 1.0
+        lightness = min(0.99, max(base_l + 0.01, lightness))
+        
+        new_r, new_g, new_b = colorsys.hls_to_rgb(h, lightness, base_s)
         new_rgb = tuple(int(x * 255) for x in (new_r, new_g, new_b))
         shades[shade_name] = rgb_to_hex(new_rgb)
     
-    return shades
+    # Calculate darker shades (600-900) by interpolating from base to black (0.0)
+    darker_ratios = {
+        '600': 0.30,  # Close to base
+        '700': 0.50,  # Midway
+        '800': 0.70,  # Getting darker
+        '900': 0.85   # Very dark
+    }
+    
+    for shade_name, ratio in darker_ratios.items():
+        # Interpolate: base (base_l) -> black (0.0)
+        # ratio of 0.0 = base, ratio of 1.0 = black
+        lightness = base_l * (1.0 - ratio)
+        
+        # Ensure we stay below base_l and above 0.0
+        lightness = max(0.01, min(base_l - 0.01, lightness))
+        
+        new_r, new_g, new_b = colorsys.hls_to_rgb(h, lightness, base_s)
+        new_rgb = tuple(int(x * 255) for x in (new_r, new_g, new_b))
+        shades[shade_name] = rgb_to_hex(new_rgb)
+    
+    # Return in order
+    return {name: shades[name] for name in ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900']}
 
 def parse_colors_file(file_path):
     """Parse colors.txt and extract color definitions."""
@@ -118,279 +162,192 @@ def generate_html_preview(colors):
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            padding: 2rem;
-            line-height: 1.6;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            background: #0A0A0A;
+            color: #fff;
+            padding: 0;
+            overflow-x: hidden;
         }
         
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #1a1a1a;
-                color: #e0e0e0;
-            }
+        .header {
+            padding: 0.5rem 1rem;
+            background: #0A0A0A;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .header h1 {
+            font-size: 1rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
         }
         
-        h1 {
-            color: #333;
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            h1 {
-                color: #e0e0e0;
-            }
-        }
-        
-        .color-group {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .color-group {
-                background: #2a2a2a;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            }
-        }
-        
-        .color-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .color-swatch {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .color-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .color-info h2 {
-                color: #e0e0e0;
-            }
-        }
-        
-        .color-details {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9rem;
-            color: #666;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .color-details {
-                color: #b0b0b0;
-            }
-        }
-        
-        .shades-grid {
+        .palette-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0;
         }
         
-        .shade-item {
-            text-align: center;
+        .color-block {
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s, z-index 0.1s;
+            border: none;
         }
         
-        .shade-swatch {
-            width: 100%;
-            height: 80px;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        .color-block:hover:not(.expanded) {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        
+        .color-block.expanded {
+            z-index: 15;
+        }
+        
+        .color-name {
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        
+        .color-hex {
+            font-size: 0.65rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        
+        .shades-container {
+            display: none;
+            position: fixed;
+            top: auto;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            background: #0A0A0A;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            z-index: 20;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0;
+            padding: 0.5rem 0;
+            max-width: 100%;
+        }
+        
+        .color-block.expanded .shades-container {
+            display: grid;
+        }
+        
+        .palette-grid {
+            position: relative;
+        }
+        
+        .color-block.expanded .shades-container {
+            display: grid;
+        }
+        
+        .shade-block {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            min-height: 100px;
         }
         
         .shade-label {
-            font-size: 0.75rem;
-            color: #666;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .shade-label {
-                color: #b0b0b0;
-            }
+            font-size: 0.6rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+            font-weight: bold;
         }
         
         .shade-hex {
+            font-size: 0.55rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+        
+        .palette-image-section {
+            margin-top: 0;
+            padding: 0.5rem 1rem;
+            background: #0A0A0A;
+            border-top: 1px solid #1a1a1a;
+        }
+        
+        .palette-image-section h2 {
             font-size: 0.7rem;
-            color: #999;
-            font-family: 'Monaco', 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .shade-hex {
-                color: #888;
-            }
-        }
-        
-        code {
-            background: #f0f0f0;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.85em;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            code {
-                background: #3a3a3a;
-                color: #e0e0e0;
-            }
-        }
-        
-        .image-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e0e0e0;
-            transition: border-color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .image-section {
-                border-top-color: #444;
-            }
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 0.5rem;
         }
         
         .image-container {
             position: relative;
-            display: block;
-            margin: 1rem 0;
-        }
-        
-        .palette-image-section .image-container {
-            margin: 0;
         }
         
         .color-image {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        .palette-image-section .color-image {
             width: 100%;
             height: auto;
+            display: block;
         }
         
         .image-actions {
             display: flex;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
         
         .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.65rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
         }
         
-        .btn-copy {
-            background: #333;
-            color: white;
-        }
-        
-        .btn-copy:hover {
-            background: #555;
-        }
-        
-        .btn-download {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .btn-download:hover {
-            background: #45a049;
+        .btn:hover {
+            background: #2a2a2a;
+            border-color: #444;
         }
         
         .btn:active {
-            transform: scale(0.98);
-        }
-        
-        .palette-image-section {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e0e0e0;
-            transition: border-color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .palette-image-section {
-                border-top-color: #444;
-            }
-        }
-        
-        .palette-image-section h2 {
-            color: #333;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .palette-image-section h2 {
-                color: #e0e0e0;
-            }
-        }
-        
-        .image-section h3 {
-            color: #333;
-            transition: color 0.3s;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .image-section h3 {
-                color: #e0e0e0;
-            }
+            transform: scale(0.95);
         }
         
         .toast {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #333;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            bottom: 1rem;
+            right: 1rem;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
+            font-size: 0.7rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', monospace;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(10px);
             transition: all 0.3s;
             z-index: 1000;
         }
@@ -402,81 +359,54 @@ def generate_html_preview(colors):
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Color Palette</h1>
+    <div class="header">
+        <h1>COLOR PALETTE</h1>
+    </div>
+    <div class="palette-grid" id="paletteGrid">
         <div id="toast" class="toast"></div>
 """
     
     for color in colors:
         name_slug = color['name'].lower().replace(' ', '-')
-        r, g, b = color['rgb']
-        h, s, l = color['hsl']
         shades = generate_shades(color['hex'], color['name'])
+        text_color = get_text_color(color['hex'])
         
-        image_filename = f"{name_slug}.png"
         html += f"""
-        <div class="color-group">
-            <div class="color-header">
-                <div class="color-swatch" style="background-color: {color['hex']};"></div>
-                <div class="color-info">
-                    <h2>{color['name']}</h2>
-                    <div class="color-details">
-                        <span><strong>HEX:</strong> <code>{color['hex']}</code></span>
-                        <span><strong>RGB:</strong> <code>rgb({r}, {g}, {b})</code></span>
-                        <span><strong>HSL:</strong> <code>hsl({h:.1f}, {s:.1f}%, {l:.1f}%)</code></span>
-                    </div>
-                </div>
-            </div>
-            <div class="shades-grid">
+        <div class="color-block" style="background-color: {color['hex']};" onclick="toggleShades(this)">
+            <div class="color-name" style="color: {text_color};">{color['name']}</div>
+            <div class="color-hex" style="color: {text_color};">{color['hex'].upper()}</div>
+            <div class="shades-container">
 """
         for shade_name, shade_hex in shades.items():
+            shade_text_color = get_text_color(shade_hex)
             html += f"""
-                <div class="shade-item">
-                    <div class="shade-swatch" style="background-color: {shade_hex};"></div>
-                    <div class="shade-label">{shade_name}</div>
-                    <div class="shade-hex">{shade_hex}</div>
+                <div class="shade-block" style="background-color: {shade_hex};" onclick="event.stopPropagation(); copyHex('{shade_hex}')">
+                    <div class="shade-label" style="color: {shade_text_color};">{shade_name}</div>
+                    <div class="shade-hex" style="color: {shade_text_color};">{shade_hex.upper()}</div>
                 </div>
 """
-        html += f"""
-            </div>
-            <div class="image-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Color Swatch</h3>
-                <div class="image-container">
-                    <img src="{image_filename}" alt="{color['name']} color swatch" class="color-image" id="img-{name_slug}">
-                    <div class="image-actions">
-                        <button class="btn btn-copy" onclick="copyImage('{image_filename}')">
-                            📋 Copy Image
-                        </button>
-                        <button class="btn btn-download" onclick="downloadImage('{image_filename}', '{color['name'].replace(' ', '_')}_swatch.png')">
-                            💾 Download Image
-                        </button>
-                    </div>
-                </div>
+        html += """
             </div>
         </div>
 """
     
-    # Add palette image section if multiple colors
+    # Add palette image section
     if len(colors) > 0:
         html += """
-        <div class="color-group palette-image-section">
-            <h2 style="margin-bottom: 1.5rem;">Complete Palette</h2>
-            <div class="image-container">
-                <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
-                <div class="image-actions">
-                    <button class="btn btn-copy" onclick="copyImage('palette.png')">
-                        📋 Copy Image
-                    </button>
-                    <button class="btn btn-download" onclick="downloadImage('palette.png', 'color_palette.png')">
-                        💾 Download Image
-                    </button>
-                </div>
+    </div>
+    <div class="palette-image-section">
+        <h2>PALETTE IMAGE</h2>
+        <div class="image-container">
+            <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
+            <div class="image-actions">
+                <button class="btn" onclick="copyImage('palette.png')">COPY</button>
+                <button class="btn" onclick="downloadImage('palette.png', 'color_palette.png')">DOWNLOAD</button>
             </div>
         </div>
+    </div>
 """
     
     html += """
-    </div>
     <script>
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -487,6 +417,44 @@ def generate_html_preview(colors):
             }, 2000);
         }
         
+        function closeAllShades() {
+            document.querySelectorAll('.color-block.expanded').forEach(block => {
+                block.classList.remove('expanded');
+            });
+        }
+        
+        function toggleShades(element) {
+            // Close all other expanded blocks
+            document.querySelectorAll('.color-block.expanded').forEach(block => {
+                if (block !== element) {
+                    block.classList.remove('expanded');
+                }
+            });
+            
+            // Toggle current block
+            element.classList.toggle('expanded');
+            
+            // Position shades container below the clicked block
+            if (element.classList.contains('expanded')) {
+                const shadesContainer = element.querySelector('.shades-container');
+                const rect = element.getBoundingClientRect();
+                shadesContainer.style.top = (rect.bottom + window.scrollY) + 'px';
+            }
+        }
+        
+        // Close shades on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAllShades();
+            }
+        });
+        
+        function copyHex(hex) {
+            navigator.clipboard.writeText(hex).then(() => {
+                showToast('Copied: ' + hex);
+            });
+        }
+        
         async function copyImage(imagePath) {
             try {
                 const response = await fetch(imagePath);
@@ -494,10 +462,10 @@ def generate_html_preview(colors):
                 await navigator.clipboard.write([
                     new ClipboardItem({ [blob.type]: blob })
                 ]);
-                showToast('Image copied to clipboard!');
+                showToast('Image copied!');
             } catch (err) {
                 console.error('Failed to copy image:', err);
-                showToast('Failed to copy image. Try downloading instead.');
+                showToast('Copy failed. Try download.');
             }
         }
         
@@ -508,7 +476,7 @@ def generate_html_preview(colors):
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('Image downloaded!');
+            showToast('Downloaded!');
         }
     </script>
 </body>
