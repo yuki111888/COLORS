@@ -77,6 +77,24 @@ This document outlines the color palette and usage guidelines for the brand.
 
 ---
 
+### PEACH PINK
+
+**Hex:** `#c5698b`  
+**RGB:** `rgb(197, 105, 139)`  
+**HSL:** `hsl(337.8, 44.2%, 59.2%)`  
+**CSS Variable:** `var(--color-peach-pink)`
+
+**Usage:**
+- Primary brand color
+- Use for key CTAs and important elements
+- Maintains brand identity
+
+**Shades Available:**
+- 50 (lightest) to 900 (darkest)
+- Access via CSS variable: `var(--color-peach-pink-[50-900])`
+
+---
+
 ### NIGHT BLACK
 
 **Hex:** `#0a0a0a`  

@@ -60,6 +60,21 @@
   --color-ice-blue-700: #34698e;
   --color-ice-blue-800: #1f3f55;
   --color-ice-blue-900: #0f1f2a;
+  --color-peach-pink: #c5698b;
+  --color-peach-pink-rgb: 197, 105, 139;
+  --color-peach-pink-hsl: 337.8, 44.2%, 59.2%;
+
+  /* PEACH PINK Shades */
+  --color-peach-pink-50: #fcf7f9;
+  --color-peach-pink-100: #f6e8ed;
+  --color-peach-pink-200: #edd2dc;
+  --color-peach-pink-300: #e2b4c5;
+  --color-peach-pink-400: #d696ad;
+  --color-peach-pink-500: #c5698b;
+  --color-peach-pink-600: #983a5d;
+  --color-peach-pink-700: #6c2a42;
+  --color-peach-pink-800: #411928;
+  --color-peach-pink-900: #200c14;
   --color-night-black: #0a0a0a;
   --color-night-black-rgb: 10, 10, 10;
   --color-night-black-hsl: 0.0, 0.0%, 3.9%;
@@ -105,6 +120,9 @@
 .bg-ice-blue { background-color: var(--color-ice-blue); }
 .text-ice-blue { color: var(--color-ice-blue); }
 .border-ice-blue { border-color: var(--color-ice-blue); }
+.bg-peach-pink { background-color: var(--color-peach-pink); }
+.text-peach-pink { color: var(--color-peach-pink); }
+.border-peach-pink { border-color: var(--color-peach-pink); }
 .bg-night-black { background-color: var(--color-night-black); }
 .text-night-black { color: var(--color-night-black); }
 .border-night-black { border-color: var(--color-night-black); }
