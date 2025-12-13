@@ -152,7 +152,7 @@ def generate_html_preview(colors):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Palette</title>
+    <title>yuki colors</title>
     <link rel="stylesheet" href="palette.css">
     <style>
         * {
@@ -229,6 +229,24 @@ def generate_html_preview(colors):
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
         
+        .shades-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 19;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+        
+        .color-block.expanded .shades-backdrop {
+            display: block;
+            opacity: 1;
+        }
+        
         .shades-container {
             display: none;
             position: fixed;
@@ -244,18 +262,19 @@ def generate_html_preview(colors):
             gap: 0;
             padding: 0.5rem 0;
             max-width: 100%;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
         
         .color-block.expanded .shades-container {
             display: grid;
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .palette-grid {
             position: relative;
-        }
-        
-        .color-block.expanded .shades-container {
-            display: grid;
         }
         
         .shade-block {
@@ -298,20 +317,9 @@ def generate_html_preview(colors):
             margin-bottom: 0.5rem;
         }
         
-        .image-container {
-            position: relative;
-        }
-        
-        .color-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
         .image-actions {
             display: flex;
             gap: 0.5rem;
-            margin-top: 0.5rem;
         }
         
         .btn {
@@ -372,10 +380,11 @@ def generate_html_preview(colors):
         text_color = get_text_color(color['hex'])
         
         html += f"""
-        <div class="color-block" style="background-color: {color['hex']};" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: {color['hex']};" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: {text_color};">{color['name']}</div>
             <div class="color-hex" style="color: {text_color};">{color['hex'].upper()}</div>
-            <div class="shades-container">
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 """
         for shade_name, shade_hex in shades.items():
             shade_text_color = get_text_color(shade_hex)
@@ -396,12 +405,9 @@ def generate_html_preview(colors):
     </div>
     <div class="palette-image-section">
         <h2>PALETTE IMAGE</h2>
-        <div class="image-container">
-            <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
-            <div class="image-actions">
-                <button class="btn" onclick="copyImage('palette.png')">COPY</button>
-                <button class="btn" onclick="downloadImage('palette.png', 'color_palette.png')">DOWNLOAD</button>
-            </div>
+        <div class="image-actions">
+            <button class="btn" onclick="copyImage('palette.png')">COPY IMAGE</button>
+            <button class="btn" onclick="downloadImage('palette.png', 'color_palette.png')">DOWNLOAD IMAGE</button>
         </div>
     </div>
 """
@@ -423,7 +429,12 @@ def generate_html_preview(colors):
             });
         }
         
-        function toggleShades(element) {
+        function toggleShades(element, event) {
+            // Stop event propagation to prevent backdrop clicks from toggling
+            if (event) {
+                event.stopPropagation();
+            }
+            
             // Close all other expanded blocks
             document.querySelectorAll('.color-block.expanded').forEach(block => {
                 if (block !== element) {
@@ -441,6 +452,27 @@ def generate_html_preview(colors):
                 shadesContainer.style.top = (rect.bottom + window.scrollY) + 'px';
             }
         }
+        
+        // Close modal when clicking on backdrop or outside
+        document.addEventListener('click', function(event) {
+            const expandedBlock = document.querySelector('.color-block.expanded');
+            if (expandedBlock) {
+                const backdrop = expandedBlock.querySelector('.shades-backdrop');
+                const shadesContainer = expandedBlock.querySelector('.shades-container');
+                const colorName = expandedBlock.querySelector('.color-name');
+                const colorHex = expandedBlock.querySelector('.color-hex');
+                
+                // Close if clicking on backdrop or outside the modal
+                if (backdrop && backdrop.contains(event.target)) {
+                    expandedBlock.classList.remove('expanded');
+                } else if (!shadesContainer.contains(event.target) && 
+                          !colorName.contains(event.target) && 
+                          !colorHex.contains(event.target) &&
+                          !expandedBlock.contains(event.target)) {
+                    expandedBlock.classList.remove('expanded');
+                }
+            }
+        });
         
         // Close shades on Escape key
         document.addEventListener('keydown', function(event) {
@@ -612,9 +644,10 @@ def generate_color_image(color, output_path):
     if not HAS_PIL:
         return False
     
-    # Image dimensions
-    width = 200
-    height = 200
+    # Image dimensions - use higher resolution for better text quality
+    scale = 2  # 2x scale for retina quality
+    width = 200 * scale
+    height = 200 * scale
     
     # Create image filled with the color (no white background)
     img = Image.new('RGB', (width, height), color=color['hex'])
@@ -624,14 +657,31 @@ def generate_color_image(color, output_path):
     text_color = get_text_color(color['hex'])
     shadow_color = '#000000' if text_color == '#FFFFFF' else '#FFFFFF'
     
-    # Fonts for name and hex
-    try:
-        name_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 20)
-        hex_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 18)
-    except:
+    # Try to find a good monospace font
+    font_paths = [
+        "/System/Library/Fonts/SF-Mono-Regular.otf",  # macOS SF Mono
+        "/System/Library/Fonts/Monaco.ttf",  # macOS Monaco
+        "/Library/Fonts/Consolas.ttf",  # Windows Consolas (if installed)
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",  # Linux
+        "/System/Library/Fonts/Helvetica.ttc",  # Fallback
+    ]
+    
+    name_font = None
+    hex_font = None
+    
+    for font_path in font_paths:
         try:
-            name_font = ImageFont.truetype("arial.ttf", 20)
-            hex_font = ImageFont.truetype("arial.ttf", 18)
+            name_font = ImageFont.truetype(font_path, 24 * scale)
+            hex_font = ImageFont.truetype(font_path, 20 * scale)
+            break
+        except:
+            continue
+    
+    # If no font found, try default
+    if name_font is None:
+        try:
+            name_font = ImageFont.load_default()
+            hex_font = ImageFont.load_default()
         except:
             name_font = ImageFont.load_default()
             hex_font = ImageFont.load_default()
@@ -649,23 +699,27 @@ def generate_color_image(color, output_path):
     hex_height = hex_bbox[3] - hex_bbox[1]
     
     # Total text height with spacing
-    total_text_height = name_height + hex_height + 8
+    total_text_height = name_height + hex_height + (8 * scale)
     start_y = (height - total_text_height) // 2
     
-    # Draw name text (centered)
+    # Draw name text (centered) with shadow
     name_x = (width - name_width) // 2
     name_y = start_y
-    draw.text((name_x + 2, name_y + 2), name_text, fill=shadow_color, font=name_font)
+    shadow_offset = 2 * scale
+    draw.text((name_x + shadow_offset, name_y + shadow_offset), name_text, fill=shadow_color, font=name_font)
     draw.text((name_x, name_y), name_text, fill=text_color, font=name_font)
     
-    # Draw hex text (centered, below name)
+    # Draw hex text (centered, below name) with shadow
     hex_x = (width - hex_width) // 2
-    hex_y = start_y + name_height + 8
-    draw.text((hex_x + 2, hex_y + 2), hex_text, fill=shadow_color, font=hex_font)
+    hex_y = start_y + name_height + (8 * scale)
+    draw.text((hex_x + shadow_offset, hex_y + shadow_offset), hex_text, fill=shadow_color, font=hex_font)
     draw.text((hex_x, hex_y), hex_text, fill=text_color, font=hex_font)
     
-    # Save image
-    img.save(output_path, 'PNG', quality=95)
+    # Resize back to original size with high-quality resampling
+    img = img.resize((200, 200), Image.Resampling.LANCZOS)
+    
+    # Save image with high quality
+    img.save(output_path, 'PNG', optimize=False)
     return True
 
 def generate_palette_image(colors, output_path):
@@ -681,9 +735,10 @@ def generate_palette_image(colors, output_path):
     cols = min(3, num_colors)  # Max 3 columns
     rows = (num_colors + cols - 1) // cols
     
-    # Individual swatch size (no spacing)
-    swatch_width = 200
-    swatch_height = 200
+    # Use higher resolution for better text quality
+    scale = 2  # 2x scale for retina quality
+    swatch_width = 200 * scale
+    swatch_height = 200 * scale
     
     # Total image size (no spacing between squares)
     total_width = cols * swatch_width
@@ -692,6 +747,35 @@ def generate_palette_image(colors, output_path):
     # Create image (will be filled by individual squares)
     img = Image.new('RGB', (total_width, total_height))
     draw = ImageDraw.Draw(img)
+    
+    # Try to find a good monospace font
+    font_paths = [
+        "/System/Library/Fonts/SF-Mono-Regular.otf",  # macOS SF Mono
+        "/System/Library/Fonts/Monaco.ttf",  # macOS Monaco
+        "/Library/Fonts/Consolas.ttf",  # Windows Consolas (if installed)
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",  # Linux
+        "/System/Library/Fonts/Helvetica.ttc",  # Fallback
+    ]
+    
+    name_font = None
+    hex_font = None
+    
+    for font_path in font_paths:
+        try:
+            name_font = ImageFont.truetype(font_path, 20 * scale)
+            hex_font = ImageFont.truetype(font_path, 18 * scale)
+            break
+        except:
+            continue
+    
+    # If no font found, try default
+    if name_font is None:
+        try:
+            name_font = ImageFont.load_default()
+            hex_font = ImageFont.load_default()
+        except:
+            name_font = ImageFont.load_default()
+            hex_font = ImageFont.load_default()
     
     # Draw each color swatch
     for idx, color in enumerate(colors):
@@ -711,18 +795,6 @@ def generate_palette_image(colors, output_path):
         text_color = get_text_color(color['hex'])
         shadow_color = '#000000' if text_color == '#FFFFFF' else '#FFFFFF'
         
-        # Fonts for name and hex
-        try:
-            name_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 18)
-            hex_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 16)
-        except:
-            try:
-                name_font = ImageFont.truetype("arial.ttf", 18)
-                hex_font = ImageFont.truetype("arial.ttf", 16)
-            except:
-                name_font = ImageFont.load_default()
-                hex_font = ImageFont.load_default()
-        
         # Get text dimensions
         name_text = color['name'].upper()
         hex_text = color['hex'].upper()
@@ -736,23 +808,29 @@ def generate_palette_image(colors, output_path):
         hex_height = hex_bbox[3] - hex_bbox[1]
         
         # Total text height with spacing
-        total_text_height = name_height + hex_height + 6
+        total_text_height = name_height + hex_height + (6 * scale)
         start_y = y + (swatch_height - total_text_height) // 2
         
-        # Draw name text (centered in this square)
+        # Draw name text (centered in this square) with shadow
         name_x = x + (swatch_width - name_width) // 2
         name_y = start_y
-        draw.text((name_x + 2, name_y + 2), name_text, fill=shadow_color, font=name_font)
+        shadow_offset = 2 * scale
+        draw.text((name_x + shadow_offset, name_y + shadow_offset), name_text, fill=shadow_color, font=name_font)
         draw.text((name_x, name_y), name_text, fill=text_color, font=name_font)
         
-        # Draw hex text (centered, below name)
+        # Draw hex text (centered, below name) with shadow
         hex_x = x + (swatch_width - hex_width) // 2
-        hex_y = start_y + name_height + 6
-        draw.text((hex_x + 2, hex_y + 2), hex_text, fill=shadow_color, font=hex_font)
+        hex_y = start_y + name_height + (6 * scale)
+        draw.text((hex_x + shadow_offset, hex_y + shadow_offset), hex_text, fill=shadow_color, font=hex_font)
         draw.text((hex_x, hex_y), hex_text, fill=text_color, font=hex_font)
     
-    # Save image
-    img.save(output_path, 'PNG', quality=95)
+    # Resize back to original size with high-quality resampling
+    final_width = cols * 200
+    final_height = rows * 200
+    img = img.resize((final_width, final_height), Image.Resampling.LANCZOS)
+    
+    # Save image with high quality
+    img.save(output_path, 'PNG', optimize=False)
     return True
 
 def main():

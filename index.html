@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Palette</title>
+    <title>yuki colors</title>
     <link rel="stylesheet" href="palette.css">
     <style>
         * {
@@ -80,6 +80,24 @@
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
         
+        .shades-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 19;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+        
+        .color-block.expanded .shades-backdrop {
+            display: block;
+            opacity: 1;
+        }
+        
         .shades-container {
             display: none;
             position: fixed;
@@ -95,18 +113,19 @@
             gap: 0;
             padding: 0.5rem 0;
             max-width: 100%;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
         
         .color-block.expanded .shades-container {
             display: grid;
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .palette-grid {
             position: relative;
-        }
-        
-        .color-block.expanded .shades-container {
-            display: grid;
         }
         
         .shade-block {
@@ -149,20 +168,9 @@
             margin-bottom: 0.5rem;
         }
         
-        .image-container {
-            position: relative;
-        }
-        
-        .color-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
         .image-actions {
             display: flex;
             gap: 0.5rem;
-            margin-top: 0.5rem;
         }
         
         .btn {
@@ -216,10 +224,11 @@
     <div class="palette-grid" id="paletteGrid">
         <div id="toast" class="toast"></div>
 
-        <div class="color-block" style="background-color: #e70000;" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: #e70000;" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: #FFFFFF;">FIRE RED</div>
             <div class="color-hex" style="color: #FFFFFF;">#E70000</div>
-            <div class="shades-container">
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 
                 <div class="shade-block" style="background-color: #fff1f1;" onclick="event.stopPropagation(); copyHex('#fff1f1')">
                     <div class="shade-label" style="color: #000000;">50</div>
@@ -274,10 +283,11 @@
             </div>
         </div>
 
-        <div class="color-block" style="background-color: #2a075b;" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: #2a075b;" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: #FFFFFF;">ROYAL PURPLE</div>
             <div class="color-hex" style="color: #FFFFFF;">#2A075B</div>
-            <div class="shades-container">
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 
                 <div class="shade-block" style="background-color: #f3ebfd;" onclick="event.stopPropagation(); copyHex('#f3ebfd')">
                     <div class="shade-label" style="color: #000000;">50</div>
@@ -332,10 +342,11 @@
             </div>
         </div>
 
-        <div class="color-block" style="background-color: #91e643;" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: #91e643;" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: #000000;">INCINERATOR GREEN</div>
             <div class="color-hex" style="color: #000000;">#91E643</div>
-            <div class="shades-container">
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 
                 <div class="shade-block" style="background-color: #f9fdf5;" onclick="event.stopPropagation(); copyHex('#f9fdf5')">
                     <div class="shade-label" style="color: #000000;">50</div>
@@ -390,10 +401,11 @@
             </div>
         </div>
 
-        <div class="color-block" style="background-color: #a8c8df;" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: #a8c8df;" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: #000000;">ICE BLUE</div>
             <div class="color-hex" style="color: #000000;">#A8C8DF</div>
-            <div class="shades-container">
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 
                 <div class="shade-block" style="background-color: #fafcfd;" onclick="event.stopPropagation(); copyHex('#fafcfd')">
                     <div class="shade-label" style="color: #000000;">50</div>
@@ -448,10 +460,11 @@
             </div>
         </div>
 
-        <div class="color-block" style="background-color: #0a0a0a;" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: #0a0a0a;" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: #FFFFFF;">NIGHT BLACK</div>
             <div class="color-hex" style="color: #FFFFFF;">#0A0A0A</div>
-            <div class="shades-container">
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 
                 <div class="shade-block" style="background-color: #f2f2f2;" onclick="event.stopPropagation(); copyHex('#f2f2f2')">
                     <div class="shade-label" style="color: #000000;">50</div>
@@ -506,10 +519,11 @@
             </div>
         </div>
 
-        <div class="color-block" style="background-color: #ffffff;" onclick="toggleShades(this)">
+        <div class="color-block" style="background-color: #f5f5f5;" onclick="toggleShades(this, event)">
             <div class="color-name" style="color: #000000;">BRIGHT WHITE</div>
-            <div class="color-hex" style="color: #000000;">#FFFFFF</div>
-            <div class="shades-container">
+            <div class="color-hex" style="color: #000000;">#F5F5F5</div>
+            <div class="shades-backdrop"></div>
+            <div class="shades-container" onclick="event.stopPropagation()">
 
                 <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
                     <div class="shade-label" style="color: #000000;">50</div>
@@ -526,39 +540,39 @@
                     <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                <div class="shade-block" style="background-color: #fafafa;" onclick="event.stopPropagation(); copyHex('#fafafa')">
                     <div class="shade-label" style="color: #000000;">300</div>
-                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
+                    <div class="shade-hex" style="color: #000000;">#FAFAFA</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #fcfcfc;" onclick="event.stopPropagation(); copyHex('#fcfcfc')">
+                <div class="shade-block" style="background-color: #f8f8f8;" onclick="event.stopPropagation(); copyHex('#f8f8f8')">
                     <div class="shade-label" style="color: #000000;">400</div>
-                    <div class="shade-hex" style="color: #000000;">#FCFCFC</div>
+                    <div class="shade-hex" style="color: #000000;">#F8F8F8</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #ffffff;" onclick="event.stopPropagation(); copyHex('#ffffff')">
+                <div class="shade-block" style="background-color: #f5f5f5;" onclick="event.stopPropagation(); copyHex('#f5f5f5')">
                     <div class="shade-label" style="color: #000000;">500</div>
-                    <div class="shade-hex" style="color: #000000;">#FFFFFF</div>
+                    <div class="shade-hex" style="color: #000000;">#F5F5F5</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #b2b2b2;" onclick="event.stopPropagation(); copyHex('#b2b2b2')">
+                <div class="shade-block" style="background-color: #ababab;" onclick="event.stopPropagation(); copyHex('#ababab')">
                     <div class="shade-label" style="color: #000000;">600</div>
-                    <div class="shade-hex" style="color: #000000;">#B2B2B2</div>
+                    <div class="shade-hex" style="color: #000000;">#ABABAB</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #7f7f7f;" onclick="event.stopPropagation(); copyHex('#7f7f7f')">
+                <div class="shade-block" style="background-color: #7a7a7a;" onclick="event.stopPropagation(); copyHex('#7a7a7a')">
                     <div class="shade-label" style="color: #FFFFFF;">700</div>
-                    <div class="shade-hex" style="color: #FFFFFF;">#7F7F7F</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#7A7A7A</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #4c4c4c;" onclick="event.stopPropagation(); copyHex('#4c4c4c')">
+                <div class="shade-block" style="background-color: #494949;" onclick="event.stopPropagation(); copyHex('#494949')">
                     <div class="shade-label" style="color: #FFFFFF;">800</div>
-                    <div class="shade-hex" style="color: #FFFFFF;">#4C4C4C</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#494949</div>
                 </div>
 
-                <div class="shade-block" style="background-color: #262626;" onclick="event.stopPropagation(); copyHex('#262626')">
+                <div class="shade-block" style="background-color: #242424;" onclick="event.stopPropagation(); copyHex('#242424')">
                     <div class="shade-label" style="color: #FFFFFF;">900</div>
-                    <div class="shade-hex" style="color: #FFFFFF;">#262626</div>
+                    <div class="shade-hex" style="color: #FFFFFF;">#242424</div>
                 </div>
 
             </div>
@@ -567,12 +581,9 @@
     </div>
     <div class="palette-image-section">
         <h2>PALETTE IMAGE</h2>
-        <div class="image-container">
-            <img src="palette.png" alt="Complete color palette" class="color-image" id="img-palette">
-            <div class="image-actions">
-                <button class="btn" onclick="copyImage('palette.png')">COPY</button>
-                <button class="btn" onclick="downloadImage('palette.png', 'color_palette.png')">DOWNLOAD</button>
-            </div>
+        <div class="image-actions">
+            <button class="btn" onclick="copyImage('palette.png')">COPY IMAGE</button>
+            <button class="btn" onclick="downloadImage('palette.png', 'color_palette.png')">DOWNLOAD IMAGE</button>
         </div>
     </div>
 
@@ -592,7 +603,12 @@
             });
         }
         
-        function toggleShades(element) {
+        function toggleShades(element, event) {
+            // Stop event propagation to prevent backdrop clicks from toggling
+            if (event) {
+                event.stopPropagation();
+            }
+            
             // Close all other expanded blocks
             document.querySelectorAll('.color-block.expanded').forEach(block => {
                 if (block !== element) {
@@ -610,6 +626,27 @@
                 shadesContainer.style.top = (rect.bottom + window.scrollY) + 'px';
             }
         }
+        
+        // Close modal when clicking on backdrop or outside
+        document.addEventListener('click', function(event) {
+            const expandedBlock = document.querySelector('.color-block.expanded');
+            if (expandedBlock) {
+                const backdrop = expandedBlock.querySelector('.shades-backdrop');
+                const shadesContainer = expandedBlock.querySelector('.shades-container');
+                const colorName = expandedBlock.querySelector('.color-name');
+                const colorHex = expandedBlock.querySelector('.color-hex');
+                
+                // Close if clicking on backdrop or outside the modal
+                if (backdrop && backdrop.contains(event.target)) {
+                    expandedBlock.classList.remove('expanded');
+                } else if (!shadesContainer.contains(event.target) && 
+                          !colorName.contains(event.target) && 
+                          !colorHex.contains(event.target) &&
+                          !expandedBlock.contains(event.target)) {
+                    expandedBlock.classList.remove('expanded');
+                }
+            }
+        });
         
         // Close shades on Escape key
         document.addEventListener('keydown', function(event) {

@@ -97,9 +97,9 @@ This document outlines the color palette and usage guidelines for the brand.
 
 ### BRIGHT WHITE
 
-**Hex:** `#ffffff`  
-**RGB:** `rgb(255, 255, 255)`  
-**HSL:** `hsl(0.0, 0.0%, 100.0%)`  
+**Hex:** `#f5f5f5`  
+**RGB:** `rgb(245, 245, 245)`  
+**HSL:** `hsl(0.0, 0.0%, 96.1%)`  
 **CSS Variable:** `var(--color-bright-white)`
 
 **Usage:**
