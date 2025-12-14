@@ -131,6 +131,42 @@ This document outlines the color palette and usage guidelines for the brand.
 
 ---
 
+### CREAM
+
+**Hex:** `#d9c2a3`  
+**RGB:** `rgb(217, 194, 163)`  
+**HSL:** `hsl(34.4, 41.5%, 74.5%)`  
+**CSS Variable:** `var(--color-cream)`
+
+**Usage:**
+- Primary brand color
+- Use for key CTAs and important elements
+- Maintains brand identity
+
+**Shades Available:**
+- 50 (lightest) to 900 (darkest)
+- Access via CSS variable: `var(--color-cream-[50-900])`
+
+---
+
+### FOREST GREEN
+
+**Hex:** `#2b501d`  
+**RGB:** `rgb(43, 80, 29)`  
+**HSL:** `hsl(103.5, 46.8%, 21.4%)`  
+**CSS Variable:** `var(--color-forest-green)`
+
+**Usage:**
+- Primary brand color
+- Use for key CTAs and important elements
+- Maintains brand identity
+
+**Shades Available:**
+- 50 (lightest) to 900 (darkest)
+- Access via CSS variable: `var(--color-forest-green-[50-900])`
+
+---
+
 
 ## Usage Guidelines
 

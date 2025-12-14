@@ -105,6 +105,36 @@
   --color-bright-white-700: #7a7a7a;
   --color-bright-white-800: #494949;
   --color-bright-white-900: #242424;
+  --color-cream: #d9c2a3;
+  --color-cream-rgb: 217, 194, 163;
+  --color-cream-hsl: 34.4, 41.5%, 74.5%;
+
+  /* CREAM Shades */
+  --color-cream-50: #fdfbfa;
+  --color-cream-100: #f9f5f1;
+  --color-cream-200: #f3ece3;
+  --color-cream-300: #ece0d1;
+  --color-cream-400: #e4d4be;
+  --color-cream-500: #d9c2a3;
+  --color-cream-600: #b78c52;
+  --color-cream-700: #866437;
+  --color-cream-800: #503c21;
+  --color-cream-900: #281e10;
+  --color-forest-green: #2b501d;
+  --color-forest-green-rgb: 43, 80, 29;
+  --color-forest-green-hsl: 103.5, 46.8%, 21.4%;
+
+  /* FOREST GREEN Shades */
+  --color-forest-green-50: #f2f9f0;
+  --color-forest-green-100: #daeed2;
+  --color-forest-green-200: #b6dea6;
+  --color-forest-green-300: #85c96b;
+  --color-forest-green-400: #5aa83d;
+  --color-forest-green-500: #2b501d;
+  --color-forest-green-600: #1e3814;
+  --color-forest-green-700: #15280e;
+  --color-forest-green-800: #0c1808;
+  --color-forest-green-900: #060c04;
 }
 
 /* Utility Classes */
@@ -129,3 +159,9 @@
 .bg-bright-white { background-color: var(--color-bright-white); }
 .text-bright-white { color: var(--color-bright-white); }
 .border-bright-white { border-color: var(--color-bright-white); }
+.bg-cream { background-color: var(--color-cream); }
+.text-cream { color: var(--color-cream); }
+.border-cream { border-color: var(--color-cream); }
+.bg-forest-green { background-color: var(--color-forest-green); }
+.text-forest-green { color: var(--color-forest-green); }
+.border-forest-green { border-color: var(--color-forest-green); }
